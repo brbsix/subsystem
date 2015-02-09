@@ -180,14 +180,14 @@ def prompt(path):
     # display prompt
     try:
         new_basename = subprocess.check_output(args).decode().strip()
-    except CalledProcessError:
+    except subprocess.CalledProcessError:
         sys.exit(1)
 
     # retry prompt if new filename already exists
     while os.path.exists(os.path.join(dirname, new_basename + extension)) and new_basename != basename:
         try:
             new_basename = subprocess.check_output(retry_args).decode().strip()
-        except CalledProcessError:
+        except subprocess.CalledProcessError:
             sys.exit(1)
 
     if new_basename == '':
