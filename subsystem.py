@@ -58,15 +58,13 @@ def main():
 
     options, arguments = parse()
 
-    videos = []
+    # create list of video files that don't have accompanying 'srt' subtitles
+    targets = [p for p in arguments if os.path.isfile(p) and not os.path.exists(os.path.splitext(p)[0] + '.srt')]
 
-    for video_path in arguments:
-        srt_path = os.path.splitext(video_path)[0] + '.srt'
-        if os.path.isfile(video_path) and not os.path.exists(srt_path):
-            if options.rename:
-                videos.append(rename(video_path))
-            else:
-                videos.append(video_path)
+    if options.rename:
+        videos = [rename(p) for p in targets]
+    else:
+        videos = targets
 
     download(videos)
 
