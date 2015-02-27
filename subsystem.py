@@ -10,17 +10,17 @@ from subtitle files.
 
 Sample download times...
 
-SS
+[ss]
 real    0m3.450s
 user    0m0.900s
 sys     0m0.138s
 
-SUBSCOPE
+[subscope]
 real    0m8.807s
 user    0m0.495s
 sys     0m0.057s
 
-PERISCOPE
+[periscope]
 real    0m15.234s
 user    0m2.292s
 sys     0m0.205s
@@ -33,13 +33,21 @@ __version__ = '0.3'
 # --- BEGIN CODE --- #
 
 from contextlib import contextmanager
+import os
+import sys
 
 
 class Config:   # pylint: disable=R0903
     """Store global script configuration values."""
+
+    # indicate the GUI terminal app (to be used with subnuker)
+    TERMINAL = 'xfce4-terminal'
+
+    # indicate the default subtitle download tool to be used
     DOWNLOADER_DEFAULT = 'ss'
-    DOWNLOADER_MODULES = ['periscope']
-    DOWNLOADER_SCRIPTS = ['ss', 'subscope']
+
+    DOWNLOADER_MODULES = ['ss']
+    DOWNLOADER_SCRIPTS = ['periscope', 'subscope']
     DOWNLOADERS_SUPPORTED = DOWNLOADER_SCRIPTS + DOWNLOADER_MODULES
 
     # this is determined at runtime
@@ -50,7 +58,7 @@ def download(downloader):
     """Return appropriate downloader."""
 
     if downloader not in Config.DOWNLOADERS_AVAILABLE:
-        fatal_error("'%s' is not installed")
+        fatal("'%s' is not installed" % downloader)
 
     if downloader == 'periscope':
         return download_periscope
@@ -62,8 +70,6 @@ def download(downloader):
 
 def download_periscope(filepaths):
     """Download subtitles for multiple video files via periscope."""
-
-    import os
 
     pids = [periscope(filepath) for filepath in filepaths]
 
@@ -82,25 +88,48 @@ def download_ss(filepaths):
 
 
 def download_subscope(filepaths):
-    """Download subtitles for multiple video files via subscope."""
+    """
+    Download subtitles for multiple video files via subscope script.
+    NOTE: currently using the py2 version subscope script via shell
+    """
 
-    from subscope.core import DownloadFirstHandler, Subscope
-    import sys
+    from locale import getlocale
+    import subprocess
 
-    handler = DownloadFirstHandler(Subscope())
+    lang = getlocale()[0].split('_')[0].lower()
+    args = ['subscope', '-l', lang] + filepaths
+    process = subprocess.Popen(args,
+                               stderr=subprocess.PIPE,
+                               stdout=subprocess.PIPE)
 
-    try:
-        with null():
-            handler.run(filepaths, ['en'])
-    except KeyboardInterrupt:
-        sys.exit(1)
+    os.waitpid(process.pid, 0)
+
+
+# def download_subscope(filepaths):
+#     """
+#     Download subtitles for multiple video files via subscope module.
+#     NOTE: subscope module is buggy in py3
+#     """
+
+#     from subscope.core import DownloadFirstHandler, Subscope
+
+#     handler = DownloadFirstHandler(Subscope())
+
+#     try:
+#         with null():
+#             handler.run(filepaths, ['en'])
+#     except KeyboardInterrupt:
+#         sys.exit(1)
 
 
 def downloader_default():
     """Return an available Config.DOWNLOADER_DEFAULT."""
 
     if not Config.DOWNLOADERS_AVAILABLE:
-        fatal_error()
+        error('No supported downloaders available')
+        print('\nPlease install one of the following:')
+        print(Config.DOWNLOADERS_SUPPORTED)
+        sys.exit(1)
 
     if Config.DOWNLOADER_DEFAULT in Config.DOWNLOADERS_AVAILABLE:
         return Config.DOWNLOADER_DEFAULT
@@ -123,18 +152,18 @@ def downloaders_available():
 
     available = []
 
-    scripts = ['periscope']
-    for script in scripts:
+    for script in Config.DOWNLOADER_SCRIPTS:
         if find_executable(script):
             available.append(script)
 
-    modules = ['ss', 'subscope']
-    for module in modules:
+    for module in Config.DOWNLOADER_MODULES:
         try:
             import_module(module)
             available.append(module)
-        except:
+        except ImportError:
             pass
+
+    available.sort()
 
     return available
 
@@ -150,6 +179,11 @@ def epilog_formatter():
     return 'Downloaders available: ' + formatted
 
 
+def error(*args):
+    """Print error message to stderr."""
+    print('ERROR:', *args, file=sys.stderr)  # pylint: disable=W0142
+
+
 def execute(*args):
     """Execute shell commands."""
     import subprocess
@@ -159,27 +193,26 @@ def execute(*args):
                      stdout=subprocess.PIPE)
 
 
-def fatal_error(*args):
+def fatal(*args):
     """Print error message to stderr then exit."""
-
-    import sys
-    print('ERROR:', *args, file=sys.stderr)
+    error(*args)
     sys.exit(1)
 
 
-def main():
+def main(args=None):
     """Start application."""
-
-    import os
 
     Config.DOWNLOADERS_AVAILABLE = downloaders_available()
     Config.DOWNLOADER_DEFAULT = downloader_default()
 
-    options, arguments = parse()
+    options, arguments = parse(args)
 
     # create list of video files that don't have accompanying 'srt' subtitles
     targets = [p for p in arguments if os.path.isfile(p) and not
                os.path.exists(os.path.splitext(p)[0] + '.srt')]
+
+    if not targets:
+        fatal('No valid targets were specified')
 
     if options.rename:
         videos = [rename(p) for p in targets]
@@ -205,7 +238,6 @@ def main():
 def notify(path):
     """Display a failure notification."""
 
-    import os
     execute('notify-send', '--urgency=normal', '--icon=edit-delete',
             'Periscope', 'Subtitles not downloaded successfully.\n'
             + os.path.basename(path))
@@ -214,9 +246,6 @@ def notify(path):
 @contextmanager
 def null():
     """Temporarily redirect stdout and stderr to /dev/null."""
-
-    import os
-    import sys
 
     try:
         original_stderr = os.dup(sys.stderr.fileno())
@@ -235,7 +264,7 @@ def null():
             devnull.close()
 
 
-def parse():
+def parse(args):
     """Parse command-line arguments. Arguments may consist of any
     combination of directories, files, and options."""
 
@@ -245,7 +274,7 @@ def parse():
         add_help=False,
         description="Download subtitle files for videos.",
         epilog=epilog_formatter(),
-        usage="%(prog)s [OPTIONS] FILES/FOLDERS")
+        usage="%(prog)s [OPTIONS] FILES|FOLDERS")
     parser.add_argument(
         "-d", "--downloader",
         action="store",
@@ -281,7 +310,7 @@ def parse():
         help=argparse.SUPPRESS,
         nargs="*")
 
-    options = parser.parse_args()
+    options = parser.parse_args(args)
     arguments = options.targets[0]
 
     return options, arguments
@@ -310,9 +339,7 @@ def prompt(path):
     except ImportError:
         from shutil import which as find_executable
 
-    import os
     import subprocess
-    import sys
 
     filepath, extension = os.path.splitext(path)
     basename = os.path.basename(filepath)
@@ -343,7 +370,7 @@ def prompt(path):
         retry_args = base + ['--text=' + retry_text]
 
     else:
-        fatal_error('ERROR: Please install yad (or zenity)')
+        fatal('Please install yad (or zenity)')
 
     # display prompt
     try:
@@ -384,19 +411,27 @@ def rename(path):
 def scan(subtitles):
     """Remove advertising from subtitles."""
 
-    execute('xfce4-terminal',
-            '--execute',
-            'subnuker',
-            '--gui',
-            '--regex',
-            *subtitles)
+    try:
+        import subnuker
+    except ImportError:
+        fatal('Unable to scan subtitles. Please install subnuker.')
+
+    if sys.stdin.isatty():
+        # launch subnuker from the existing terminal
+        subnuker.main(['--gui', '--regex'] + subtitles)
+    else:
+        # launch subnuker from a new terminal
+        execute(Config.TERMINAL,  # pylint: disable=W0142
+                '--execute',
+                'subnuker',
+                '--gui',
+                '--regex',
+                *subtitles)
 
 
 def warning(*args):
     """Print warning message to stderr."""
-
-    import sys
-    print('WARNING:', *args, file=sys.stderr)
+    print('WARNING:', *args, file=sys.stderr)  # pylint: disable=W0142
 
 
 if __name__ == '__main__':
