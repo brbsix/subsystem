@@ -27,7 +27,7 @@ sys     0m0.205s
 """
 
 __program__ = 'subsystem'
-__version__ = '0.3'
+__version__ = '0.4'
 
 
 # --- BEGIN CODE --- #
@@ -46,137 +46,112 @@ class Config:   # pylint: disable=R0903
     # indicate the default subtitle download tool to be used
     DOWNLOADER_DEFAULT = 'ss'
 
-    DOWNLOADER_MODULES = ['ss']
-    DOWNLOADER_SCRIPTS = ['periscope', 'subscope']
-    DOWNLOADERS_SUPPORTED = DOWNLOADER_SCRIPTS + DOWNLOADER_MODULES
 
-    # this is determined at runtime
-    DOWNLOADERS_AVAILABLE = []
+class Downloader:
+    """Functions to prepare and use the downloaders."""
 
+    MODULES = ['ss']
+    SCRIPTS = ['periscope', 'subscope']
+    SUPPORTED = SCRIPTS + MODULES
 
-def download(downloader):
-    """Return appropriate downloader."""
+    def __init__(self):
+        self.available = self.getavailable()
+        Config.DOWNLOADER_DEFAULT = self.getdefault()
 
-    if downloader not in Config.DOWNLOADERS_AVAILABLE:
-        fatal("'%s' is not installed" % downloader)
+    def getavailable(self):
+        """Return a list of subtitle downloaders available."""
 
-    if downloader == 'periscope':
-        return download_periscope
-    elif downloader == 'ss':
-        return download_ss
-    elif downloader == 'subscope':
-        return download_subscope
+        from importlib import import_module
 
+        try:
+            from distutil.spawn import find_executable
+        except ImportError:
+            from shutil import which as find_executable
 
-def download_periscope(filepaths):
-    """Download subtitles for multiple video files via periscope."""
+        available = []
 
-    pids = [periscope(filepath) for filepath in filepaths]
+        for script in self.SCRIPTS:
+            if find_executable(script):
+                available.append(script)
 
-    for pid in pids:
-        os.waitpid(pid, 0)
+        for module in self.MODULES:
+            try:
+                import_module(module)
+                available.append(module)
+            except ImportError:
+                pass
 
+        available.sort()
 
-def download_ss(filepaths):
-    """Download subtitles for multiple video files via periscope."""
+        return available
 
-    import ss
+    def getdefault(self):
+        """Return an available default downloader."""
 
-    with null():
-        # ss.main will strip arg[0]
-        ss.main(['ss'] + filepaths)
+        if not self.available:
+            error('No supported downloaders available')
+            print('\nPlease install one of the following:')
+            print(self.SUPPORTED)
+            sys.exit(1)
 
+        default = Config.DOWNLOADER_DEFAULT
 
-def download_subscope(filepaths):
-    """
-    Download subtitles for multiple video files via subscope script.
-    NOTE: currently using the py2 version subscope script via shell
-    """
+        if default in self.available:
+            return default
+        else:
+            alternative = self.available[0]
+            warning("Default downloader '%s' is not available, using '%s' instead."
+                    % (Config.DOWNLOADER_DEFAULT, alternative))
+            return alternative
 
-    from locale import getlocale
-    import subprocess
+    def download(self, paths, tool, language):
+        """Download subtitles via a number of tools."""
 
-    lang = getlocale()[0].split('_')[0].lower()
-    args = ['subscope', '-l', lang] + filepaths
-    process = subprocess.Popen(args,
-                               stderr=subprocess.PIPE,
-                               stdout=subprocess.PIPE)
+        if tool not in self.available:
+            fatal("'%s' is not installed" % tool)
 
-    os.waitpid(process.pid, 0)
+        try:
+            from subsystem import plugins
+            downloader = plugins.__getattribute__(tool)  # pylint: disable=E1101
+        except AttributeError:
+            fatal("'%s' is not a supported download tool" % tool)
 
+        if downloader.__code__.co_argcount is 2:
+            downloader(paths, language)
+        elif downloader.__code__.co_argcount is 1:
+            downloader(paths)
 
-# def download_subscope(filepaths):
-#     """
-#     Download subtitles for multiple video files via subscope module.
-#     NOTE: subscope module is buggy in py3
-#     """
+    def epilog(self):
+        """Return text formatted for the usage description's epilog."""
 
-#     from subscope.core import DownloadFirstHandler, Subscope
-
-#     handler = DownloadFirstHandler(Subscope())
-
-#     try:
-#         with null():
-#             handler.run(filepaths, ['en'])
-#     except KeyboardInterrupt:
-#         sys.exit(1)
-
-
-def downloader_default():
-    """Return an available Config.DOWNLOADER_DEFAULT."""
-
-    if not Config.DOWNLOADERS_AVAILABLE:
-        error('No supported downloaders available')
-        print('\nPlease install one of the following:')
-        print(Config.DOWNLOADERS_SUPPORTED)
-        sys.exit(1)
-
-    if Config.DOWNLOADER_DEFAULT in Config.DOWNLOADERS_AVAILABLE:
-        return Config.DOWNLOADER_DEFAULT
-    else:
-        alternative = Config.DOWNLOADERS_AVAILABLE[0]
-        warning("Default downloader '%s' is not available, using '%s' instead."
-                % (Config.DOWNLOADER_DEFAULT, alternative))
-        return alternative
+        bold = '\033[1m'
+        end = '\033[0m'
+        available = self.available.copy()
+        index = available.index(Config.DOWNLOADER_DEFAULT)
+        available[index] = bold + '(' + available[index] + ')' + end
+        formatted = '  |  '.join(available)
+        return "Downloaders available: " + formatted
 
 
-def downloaders_available():
-    """Return a list of subtitle downloaders available."""
-
-    from importlib import import_module
+@contextmanager
+def devnull():
+    """Temporarily redirect stdout and stderr to /dev/null."""
 
     try:
-        from distutil.spawn import find_executable
-    except ImportError:
-        from shutil import which as find_executable
+        original_stderr = os.dup(sys.stderr.fileno())
+        original_stdout = os.dup(sys.stdout.fileno())
+        null = open(os.devnull, 'w')
+        os.dup2(null.fileno(), sys.stderr.fileno())
+        os.dup2(null.fileno(), sys.stdout.fileno())
+        yield
 
-    available = []
-
-    for script in Config.DOWNLOADER_SCRIPTS:
-        if find_executable(script):
-            available.append(script)
-
-    for module in Config.DOWNLOADER_MODULES:
-        try:
-            import_module(module)
-            available.append(module)
-        except ImportError:
-            pass
-
-    available.sort()
-
-    return available
-
-
-def epilog_formatter():
-    """Return text formatted for the usage description's epilog."""
-    bold = '\033[1m'
-    end = '\033[0m'
-    available = Config.DOWNLOADERS_AVAILABLE.copy()
-    index = available.index(Config.DOWNLOADER_DEFAULT)
-    available[index] = bold + '(' + available[index] + ')' + end
-    formatted = '  |  '.join(available)
-    return 'Downloaders available: ' + formatted
+    finally:
+        if original_stderr is not None:
+            os.dup2(original_stderr, sys.stderr.fileno())
+        if original_stdout is not None:
+            os.dup2(original_stdout, sys.stdout.fileno())
+        if null is not None:
+            null.close()
 
 
 def error(*args):
@@ -202,10 +177,10 @@ def fatal(*args):
 def main(args=None):
     """Start application."""
 
-    Config.DOWNLOADERS_AVAILABLE = downloaders_available()
-    Config.DOWNLOADER_DEFAULT = downloader_default()
+    dlx = Downloader()
+    epilog = dlx.epilog()
 
-    options, arguments = parse(args)
+    options, arguments = parse(args, epilog)
 
     # create list of video files that don't have accompanying 'srt' subtitles
     targets = [p for p in arguments if os.path.isfile(p) and not
@@ -219,8 +194,7 @@ def main(args=None):
     else:
         videos = targets
 
-    downloader = download(options.downloader)
-    downloader(videos)
+    dlx.download(videos, options.downloader, options.language)
 
     subtitles = []
 
@@ -235,6 +209,23 @@ def main(args=None):
         scan(subtitles)
 
 
+def multithreader(args, paths):
+    """Execute multiple shell processes at once."""
+
+    def shellprocess(path):
+        """Return a ready-to-use shell subprocess."""
+        import subprocess
+        process = subprocess.Popen(args + [path],
+                                   stderr=subprocess.PIPE,
+                                   stdout=subprocess.PIPE)
+        return process
+
+    processes = [shellprocess(path) for path in paths]
+
+    for process in processes:
+        process.wait()
+
+
 def notify(path):
     """Display a failure notification."""
 
@@ -243,37 +234,19 @@ def notify(path):
             + os.path.basename(path))
 
 
-@contextmanager
-def null():
-    """Temporarily redirect stdout and stderr to /dev/null."""
-
-    try:
-        original_stderr = os.dup(sys.stderr.fileno())
-        original_stdout = os.dup(sys.stdout.fileno())
-        devnull = open(os.devnull, 'w')
-        os.dup2(devnull.fileno(), sys.stderr.fileno())
-        os.dup2(devnull.fileno(), sys.stdout.fileno())
-        yield
-
-    finally:
-        if original_stderr is not None:
-            os.dup2(original_stderr, sys.stderr.fileno())
-        if original_stdout is not None:
-            os.dup2(original_stdout, sys.stdout.fileno())
-        if devnull is not None:
-            devnull.close()
-
-
-def parse(args):
+def parse(args, epilog):
     """Parse command-line arguments. Arguments may consist of any
     combination of directories, files, and options."""
 
     import argparse
 
+    from locale import getlocale
+    language = getlocale()[0].split('_')[0].lower()
+
     parser = argparse.ArgumentParser(
         add_help=False,
         description="Download subtitle files for videos.",
-        epilog=epilog_formatter(),
+        epilog=epilog,
         usage="%(prog)s [OPTIONS] FILES|FOLDERS")
     parser.add_argument(
         "-d", "--downloader",
@@ -281,6 +254,12 @@ def parse(args):
         default=Config.DOWNLOADER_DEFAULT,
         dest="downloader",
         help="indicate downloader to use")
+    parser.add_argument(
+        "-l", "--language",
+        action="store",
+        default=language,
+        dest="language",
+        help="indicate language to use [%s]" % language)
     parser.add_argument(
         "-q", "--quiet",
         action="store_true",
@@ -314,21 +293,6 @@ def parse(args):
     arguments = options.targets[0]
 
     return options, arguments
-
-
-def periscope(filename):
-    """Open periscope subprocess."""
-
-    from locale import getlocale
-    import subprocess
-
-    lang = getlocale()[0].split('_')[0].lower()
-    args = ['periscope', '-l', lang, '--quiet', filename]
-    process = subprocess.Popen(args,
-                               stderr=subprocess.PIPE,
-                               stdout=subprocess.PIPE)
-
-    return process.pid
 
 
 def prompt(path):

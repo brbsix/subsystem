@@ -19,7 +19,7 @@ The :code:`subsystem` package is known to be compatible with Python 3.
 Requirements
 ============
 
-yad or zenity is required if you'd like to make use of the GUI renamer
+yad or zenity is required if you'd like to make use of the GUI renamer.
 
 yad is highly recommended and is available via sources (at its homepage_) or via PPA (Launchpad_):
 
@@ -29,7 +29,10 @@ yad is highly recommended and is available via sources (at its homepage_) or via
     sudo apt-get update && sudo apt-get install yad
 
 zenity is not particularly recommended but is available for download via:
-:code:`sudo apt-get install zenity`
+
+::
+
+  sudo apt-get install zenity
 
 In order to make use of subsystem, you need have external downloaders installed. I recommend the Python 3 compatible download tool :code:`ss`. In my limited experience is has been the fastest and most reliable tool available.
 
@@ -51,9 +54,7 @@ subsystem is also interoperable with the Python 2 compatible downloaders :code:`
 Usage
 =====
 
-From the command line, run :code:`subsystem --help` to display options and downloaders available.
-
-subsystem will use :code:`ss` by default if possible, but will use whatever is available.
+From the command line, run :code:`subsystem --help` to display options and downloaders available. Subsystem will use :code:`ss` by default if possible, but will use whatever is available.
 
 To download subtitles for files:
 
@@ -73,7 +74,7 @@ To rename video files then scan upon download completion:
 
     subsystem --rename --scan FILES
 
-To silence failure popup notications:
+To silence popup notications upon failure:
 
 ::
 

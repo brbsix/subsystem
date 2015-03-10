@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 
-from setuptools import setup
-from subsystem import __program__
-from subsystem import __version__
+from setuptools import setup, find_packages
+from subsystem.subsystem import  __program__
+from subsystem.subsystem import  __version__
 
 
 def read(filename):
@@ -15,16 +15,16 @@ setup(
     version=__version__,
     author='Brian Beffa',
     author_email='brbsix@gmail.com',
-    description="Download subtitle files in batch",
+    description="Download and process subtitle files in batch",
     long_description=read('README.rst'),
     url='https://github.com/brbsix/subsystem',
     license='GPLv3',
     keywords=['advertising', 'download', 'periscope', 'srt', 'subtitle'],
-    py_modules=['subsystem'],
+    packages=find_packages(),
     install_requires=['subnuker'],
     entry_points={
         'console_scripts': [
-            'subsystem=subsystem:main'],
+            'subsystem=subsystem.subsystem:main'],
     },
     classifiers=[
         'Development Status :: 4 - Beta',
