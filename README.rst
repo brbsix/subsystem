@@ -52,7 +52,7 @@ In order to make use of ``subsystem``, you'll need to install a downloader. I re
 Usage
 =====
 
-From the command line, run ``subsystem --help`` to display available options and downloaders. ``subsystem11 will use ``ss`` by default if possible, but will detect and use whatever is available.
+From the command line, run ``subsystem --help`` to display available options and downloaders. ``subsystem`` will use ``ss`` by default if possible, otherwise it will detect and use whatever is available.
 
 To download subtitles for files:
 
