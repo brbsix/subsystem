@@ -27,7 +27,7 @@ sys     0m0.205s
 """
 
 __program__ = 'subsystem'
-__version__ = '0.4'
+__version__ = '0.5'
 
 
 # --- BEGIN CODE --- #
