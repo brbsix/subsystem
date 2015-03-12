@@ -13,34 +13,30 @@ Installation
 
   pip3 install --user subsystem
 
-The :code:`subsystem` package is known to be compatible with Python 3.
+The ``subsystem`` package is known to be compatible with Python 3.
 
 
 Requirements
 ============
 
+NOTE: The most recent version of ``subsystem`` includes a bundled copy of the yad v0.28.0 binary. It is tentatively included at this time purely out of convenience.
+
 yad or zenity is required if you'd like to make use of the GUI renamer.
 
-yad is highly recommended and is available via sources (at its homepage_) or via PPA (Launchpad_):
+yad is highly recommended over zenity and is available via tarball (at its homepage_) or webupd8team PPA (Launchpad_):
 
 ::
 
     sudo apt-add-repository ppa:webupd8team/y-ppa-manager
     sudo apt-get update && sudo apt-get install yad
 
-zenity is not particularly recommended but is available for download via:
-
-::
-
-  sudo apt-get install zenity
-
-In order to make use of subsystem, you need have external downloaders installed. I recommend the Python 3 compatible download tool :code:`ss`. In my limited experience is has been the fastest and most reliable tool available.
+In order to make use of subsystem, you need have external downloaders installed. I recommend the Python 3 compatible download tool ``ss``. In my limited experience is has been the fastest and most reliable tool available.
 
 ::
 
   pip3 install --user ss
 
-subsystem is also interoperable with the Python 2 compatible downloaders :code:`periscope` and :code:`subscope`
+subsystem is also compatible with ``periscope`` and ``subscope`` (NOTE: these scripts appear to be Python 2 ONLY)
 
 ::
 
@@ -54,7 +50,7 @@ subsystem is also interoperable with the Python 2 compatible downloaders :code:`
 Usage
 =====
 
-From the command line, run :code:`subsystem --help` to display options and downloaders available. Subsystem will use :code:`ss` by default if possible, but will use whatever is available.
+From the command line, run ``subsystem --help`` to display options and downloaders available. Subsystem will use ``ss`` by default if possible, but will use whatever is available.
 
 To download subtitles for files:
 

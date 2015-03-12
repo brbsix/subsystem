@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from setuptools import setup, find_packages
+from setuptools import find_packages, setup
 from subsystem.subsystem import  __program__
 from subsystem.subsystem import  __version__
 
@@ -22,9 +22,9 @@ setup(
     keywords=['advertising', 'download', 'periscope', 'srt', 'subtitle'],
     packages=find_packages(),
     install_requires=['subnuker'],
+    data_files=[('bin', ['binary/yad'])],
     entry_points={
-        'console_scripts': [
-            'subsystem=subsystem.subsystem:main'],
+        'console_scripts': ['subsystem=subsystem.subsystem:main'],
     },
     classifiers=[
         'Development Status :: 4 - Beta',
@@ -32,6 +32,7 @@ setup(
         'Intended Audience :: Developers',
         'Intended Audience :: End Users/Desktop',
         'License :: OSI Approved :: GNU General Public License v3 (GPLv3)',
+        'Natural Language :: English',
         'Operating System :: POSIX',
         'Operating System :: POSIX :: Linux',
         'Programming Language :: Python :: 3',
