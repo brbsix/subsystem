@@ -86,6 +86,6 @@ Copyright (c) 2015 Six (brbsix@gmail.com).
 
 Licensed under the GPLv3 license.
 
-.. _homepage: http://sourceforge.net/projects/yad-dialog/
+.. _homepage: http://sourceforge.net/projects/yad-dialog
 .. _Launchpad: https://launchpad.net/~webupd8team/+archive/ubuntu/y-ppa-manager
-:: _subnuker: https://github.com/brbsix/subnuker
+.. _subnuker: https://github.com/brbsix/subnuker
