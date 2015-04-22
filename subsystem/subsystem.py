@@ -175,8 +175,11 @@ def devnull():
 
 
 def error(*args):
-    """Print error message to stderr."""
-    print('ERROR:', *args, file=sys.stderr)  # pylint: disable=W0142
+    """Display error message via stderr or GUI."""
+    if sys.stdin.isatty():
+        print('ERROR:', *args, file=sys.stderr)  # pylint: disable=W0142
+    else:
+        notify_error(*args)
 
 
 def execute(*args):
@@ -188,8 +191,17 @@ def execute(*args):
                      stdout=subprocess.PIPE)
 
 
+def failure(path, downloader):
+    """Display warning message via stderr or GUI."""
+    base = os.path.basename(path)
+    if sys.stdin.isatty():
+        print("INFO [{0}]:".format(downloader), "Failed to download '{0}'".format(base))
+    else:
+        notify_failure(base, downloader)
+
+
 def fatal(*args):
-    """Print error message to stderr then exit."""
+    """Display error message via stderr or GUI before exiting."""
     error(*args)
     sys.exit(1)
 
@@ -223,7 +235,7 @@ def main(args=None):
         if os.path.isfile(srt_path):
             subtitles.append(srt_path)
         elif not options.quiet:
-            notify(video_path)
+            failure(video_path, options.downloader)
 
     if options.scan and subtitles:
         scan(subtitles)
@@ -246,12 +258,26 @@ def multithreader(args, paths):
         process.wait()
 
 
-def notify(path):
-    """Display a failure notification."""
+def notify(title, message, icon):
+    """Display a message."""
+    execute('notify-send', '--icon=' + icon, title, message)
 
-    execute('notify-send', '--urgency=normal', '--icon=edit-delete',
-            'Periscope', 'Subtitles not downloaded successfully.\n'
-            + os.path.basename(path))
+
+def notify_error(message):
+    """Display an error message."""
+    notify(__program__, 'ERROR: ' + message, 'edit-delete')
+
+
+def notify_failure(path, downloader):
+    """Display a failure notification."""
+    notify('{0} [{1}]'.format(__program__, downloader),
+           'Subtitles not downloaded successfully.\n' +
+           path, 'edit-delete')
+
+
+def notify_warning(message):
+    """Display a warning message."""
+    notify(__program__, 'WARNING: ' + message, 'emblem-important')
 
 
 def parse(args, epilog):
@@ -316,7 +342,16 @@ def parse(args, epilog):
 
 
 def prompt(path):
-    """Prompt for a new file name."""
+    """Prompt for a new filename via terminal or GUI."""
+
+    if sys.stdin.isatty():
+        return prompt_terminal(path)
+    else:
+        return prompt_gui(path)
+
+
+def prompt_gui(path):
+    """Prompt for a new filename via GUI."""
 
     try:
         from distutil.spawn import find_executable
@@ -356,7 +391,7 @@ def prompt(path):
     else:
         fatal('Please install yad (or zenity)')
 
-    # display prompt
+    # display filename prompt
     try:
         new_basename = subprocess.check_output(args).decode().strip()
     except subprocess.CalledProcessError:
@@ -369,6 +404,35 @@ def prompt(path):
             new_basename = subprocess.check_output(retry_args).decode().strip()
         except subprocess.CalledProcessError:
             sys.exit(1)
+
+    if new_basename == '':
+        new_basename = basename
+
+    return os.path.join(dirname, new_basename + extension)
+
+
+def prompt_terminal(path):
+    """Prompt for a new filename via terminal."""
+
+    def rlinput(prompt, prefill=''):
+        import readline
+        readline.set_startup_hook(lambda: readline.insert_text(prefill))
+        try:
+            return input(prompt)
+        finally:
+            readline.set_startup_hook()
+
+    filepath, extension = os.path.splitext(path)
+    basename = os.path.basename(filepath)
+    dirname = os.path.dirname(filepath)
+
+    # display filename prompt
+    new_basename = rlinput('Filename: ', basename)
+
+    # retry prompt if new filename already exists
+    while os.path.exists(os.path.join(dirname, new_basename + extension)) and \
+            new_basename != basename:
+        new_basename = rlinput('Sorry, please try again... Filename: ', basename)
 
     if new_basename == '':
         new_basename = basename
@@ -414,8 +478,11 @@ def scan(subtitles):
 
 
 def warning(*args):
-    """Print warning message to stderr."""
-    print('WARNING:', *args, file=sys.stderr)  # pylint: disable=W0142
+    """Display warning message via stderr or GUI."""
+    if sys.stdin.isatty():
+        print('WARNING:', *args, file=sys.stderr)  # pylint: disable=W0142
+    else:
+        notify_warning(*args)
 
 
 if __name__ == '__main__':
