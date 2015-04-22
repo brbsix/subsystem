@@ -78,7 +78,7 @@ To scan subtitles files with ``subnuker`` upon download completion:
 
     subsystem --scan FILE...
 
-Note: Executing subsystem with the ``--scan`` option from a GUI will open ``subnuker`` in a new terminal window. It is configured to use ``xfce4-terminal``. Let me know if you'd like to support another terminal and I'll add the feature.
+Executing subsystem with the ``--scan`` option from a GUI will open ``subnuker`` in a terminal window. It is configured to use ``xfce4-terminal``. Let me know if you'd like to support another terminal and I'll add the feature.
 
 To silence ``notify-send`` notications upon failure:
 
