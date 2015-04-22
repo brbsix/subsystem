@@ -116,10 +116,16 @@ class Downloader:
         except AttributeError:
             fatal("'%s' is not a supported download tool" % tool)
 
-        if downloader.__code__.co_argcount is 2:
-            downloader(paths, language)
-        elif downloader.__code__.co_argcount is 1:
-            downloader(paths)
+        try:
+            if downloader.__code__.co_argcount is 2:
+                downloader(paths, language)
+            elif downloader.__code__.co_argcount is 1:
+                downloader(paths)
+        except:  # pylint: disable=W0702
+            if not check_connectivity():
+                error('Internet connectivity appears to be disabled')
+            else:
+                error("'{0}' experienced an unknown error".format(tool))
 
     def epilog(self):
         """Return text formatted for the usage description's epilog."""
@@ -131,6 +137,20 @@ class Downloader:
         available[index] = bold + '(' + available[index] + ')' + end
         formatted = '  |  '.join(available)
         return "Downloaders available: " + formatted
+
+
+def check_connectivity():
+    """
+    Check for Internet connectivity (upon download error).
+    """
+
+    from urllib import request
+
+    try:
+        request.urlopen('http://www.google.com', timeout=5)
+        return True
+    except request.URLError:
+        pass
 
 
 @contextmanager
