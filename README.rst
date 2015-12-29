@@ -1,6 +1,15 @@
 subsystem
 ---------
 
+.. image:: https://img.shields.io/pypi/v/subsystem.svg
+  :target: https://pypi.python.org/pypi/subsystem
+
+.. image:: https://img.shields.io/pypi/l/subsystem.svg
+  :target: https://pypi.python.org/pypi/subsystem
+
+.. image:: https://img.shields.io/pypi/dm/subsystem.svg
+  :target: https://pypi.python.org/pypi/subsystem
+
 This script is intended to be a one-stop-shop for batch preparing freshly downloaded video files for use with subtitles.
 
 The tool can be used from the command-line but is ideal for use via GUI file managers (i.e. Thunar Custom Actions or Nautilus actions.). With a single click of several video files: prompt to rename files, download the best subtitle file available (displaying a popup notification upon failure), then open a terminal window to scan and remove advertising (via subnuker_).
