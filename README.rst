@@ -1,5 +1,5 @@
-About
-=====
+subsystem
+---------
 
 This script is intended to be a one-stop-shop for batch preparing freshly downloaded video files for use with subtitles.
 
