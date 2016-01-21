@@ -26,15 +26,13 @@ user    0m2.292s
 sys     0m0.205s
 """
 
-__program__ = 'subsystem'
-__version__ = '0.5.1'
-
-
-# --- BEGIN CODE --- #
-
 from contextlib import contextmanager
 import os
 import sys
+
+
+__program__ = 'subsystem'
+__version__ = '0.5.1'
 
 
 class Config:   # pylint: disable=too-few-public-methods
