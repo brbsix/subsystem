@@ -15,7 +15,8 @@ def periscope(paths, language):
 
     multithreader(['periscope', '-l', language, '--quiet'], paths)
 
-def ss(paths):  # pylint: disable=C0103
+
+def ss(paths):  # pylint: disable=invalid-name
     """Download subtitles for multiple video files via periscope."""
 
     from ss import main

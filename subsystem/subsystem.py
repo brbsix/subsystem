@@ -37,7 +37,7 @@ import os
 import sys
 
 
-class Config:   # pylint: disable=R0903
+class Config:   # pylint: disable=too-few-public-methods
     """Store global script configuration values."""
 
     # indicate the GUI terminal app (to be used with subnuker)
@@ -113,7 +113,7 @@ class Downloader:
 
         try:
             from subsystem import plugins
-            downloader = plugins.__getattribute__(tool)  # pylint: disable=E1101
+            downloader = plugins.__getattribute__(tool)
         except AttributeError:
             fatal("'%s' is not a supported download tool" % tool)
 
@@ -122,7 +122,7 @@ class Downloader:
                 downloader(paths, language)
             elif downloader.__code__.co_argcount is 1:
                 downloader(paths)
-        except:  # pylint: disable=W0702
+        except:  # pylint: disable=bare-except
             if not check_connectivity():
                 error('Internet connectivity appears to be disabled')
             else:
@@ -178,7 +178,7 @@ def devnull():
 def error(*args):
     """Display error message via stderr or GUI."""
     if sys.stdin.isatty():
-        print('ERROR:', *args, file=sys.stderr)  # pylint: disable=W0142
+        print('ERROR:', *args, file=sys.stderr)
     else:
         notify_error(*args)
 
@@ -460,28 +460,41 @@ def rename(path):
 def scan(subtitles):
     """Remove advertising from subtitles."""
 
+    from distutils.version import StrictVersion
+    from importlib.util import find_spec
+
     try:
         import subnuker
     except ImportError:
         fatal('Unable to scan subtitles. Please install subnuker.')
 
+    # check whether aeidon is available
+    aeidon = find_spec('aeidon') is not None
+
+    # check whether subnuker supports --ignore-case
+    ignore_case = StrictVersion(subnuker.__version__) >= StrictVersion('0.4.5')
+
     if sys.stdin.isatty():
         # launch subnuker from the existing terminal
-        subnuker.main(['--gui', '--regex'] + subtitles)
+        args = (['--aeidon'] if aeidon else []) + \
+               (['--ignore-case'] if ignore_case else []) + \
+               ['--gui', '--regex'] + subtitles
+        subnuker.main(args)
     else:
         # launch subnuker from a new terminal
-        execute(Config.TERMINAL,  # pylint: disable=W0142
+        args = (['--aeidon'] if aeidon else []) + \
+               (['--ignore-case'] if ignore_case else []) + \
+               ['--gui', '--regex']
+        execute(Config.TERMINAL,
                 '--execute',
                 'subnuker',
-                '--gui',
-                '--regex',
-                *subtitles)
+                *args + subtitles)
 
 
 def warning(*args):
     """Display warning message via stderr or GUI."""
     if sys.stdin.isatty():
-        print('WARNING:', *args, file=sys.stderr)  # pylint: disable=W0142
+        print('WARNING:', *args, file=sys.stderr)
     else:
         notify_warning(*args)
 
