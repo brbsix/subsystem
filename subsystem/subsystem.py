@@ -102,7 +102,7 @@ class Downloader:
             return default
         else:
             alternative = self.available[0]
-            warning("Default downloader '%s' is not available, using '%s' instead."
+            warning("Default downloader '%s' not available, using '%s' instead"
                     % (Config.DOWNLOADER_DEFAULT, alternative))
             return alternative
 
