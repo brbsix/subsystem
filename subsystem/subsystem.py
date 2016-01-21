@@ -63,15 +63,10 @@ class Downloader:
 
         from importlib import import_module
 
-        try:
-            from distutil.spawn import find_executable
-        except ImportError:
-            from shutil import which as find_executable
-
         available = []
 
         for script in self.SCRIPTS:
-            if find_executable(script):
+            if have(script):
                 available.append(script)
 
         for module in self.MODULES:
@@ -204,6 +199,49 @@ def fatal(*args):
     """Display error message via stderr or GUI before exiting."""
     error(*args)
     sys.exit(1)
+
+
+def have(cmd):
+    """Determine whether supplied argument is a command on the PATH."""
+
+    try:
+        # Python 3.3+ only
+        from shutil import which
+    except ImportError:
+        def which(cmd):
+            """
+            Given a command, return the path which conforms to the given mode
+            on the PATH, or None if there is no such file.
+            """
+
+            def _access_check(path):
+                """
+                Check that a given file can be accessed with the correct mode.
+                Additionally check that `path` is not a directory.
+                """
+                return (os.path.exists(path) and os.access(
+                    path, os.F_OK | os.X_OK) and not os.path.isdir(path))
+
+            # If we're given a path with a directory part, look it up directly
+            # rather than referring to PATH directories. This includes checking
+            # relative to the current directory, e.g. ./script
+            if os.path.dirname(cmd):
+                if _access_check(cmd):
+                    return cmd
+                return None
+
+            paths = os.environ.get('PATH', os.defpath.lstrip(':')).split(':')
+
+            seen = set()
+            for path in paths:
+                if path not in seen:
+                    seen.add(path)
+                    name = os.path.join(path, cmd)
+                    if _access_check(name):
+                        return name
+            return None
+
+    return which(cmd) is not None
 
 
 def main(args=None):
@@ -351,11 +389,6 @@ def prompt(path):
 def prompt_gui(path):
     """Prompt for a new filename via GUI."""
 
-    try:
-        from distutil.spawn import find_executable
-    except ImportError:
-        from shutil import which as find_executable
-
     import subprocess
 
     filepath, extension = os.path.splitext(path)
@@ -366,7 +399,7 @@ def prompt_gui(path):
     icon = 'video-x-generic'
 
     # detect and configure dialog program
-    if find_executable('yad'):
+    if have('yad'):
         args = ['yad',
                 '--borders=5',
                 '--entry',
@@ -377,7 +410,7 @@ def prompt_gui(path):
         retry_args = args + ['--text=<b>' + retry_text + '</b>',
                              '--text-align=center']
 
-    elif find_executable('zenity'):
+    elif have('zenity'):
         base = ['zenity',
                 '--entry',
                 '--entry-text=' + basename,
