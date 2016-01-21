@@ -414,11 +414,11 @@ def prompt_gui(path):
 def prompt_terminal(path):
     """Prompt for a new filename via terminal."""
 
-    def rlinput(prompt, prefill=''):
+    def rlinput(prompt_msg, prefill=''):
         import readline
         readline.set_startup_hook(lambda: readline.insert_text(prefill))
         try:
-            return input(prompt)
+            return input(prompt_msg)
         finally:
             readline.set_startup_hook()
 
