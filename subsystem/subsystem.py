@@ -415,6 +415,11 @@ def prompt_terminal(path):
     """Prompt for a new filename via terminal."""
 
     def rlinput(prompt_msg, prefill=''):
+        """
+        One line is read from standard input. Display `prompt_msg` on
+        standard error. `prefill` is placed into the editing buffer
+        before editing begins.
+        """
         import readline
         readline.set_startup_hook(lambda: readline.insert_text(prefill))
         try:
