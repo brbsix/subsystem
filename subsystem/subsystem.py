@@ -384,7 +384,7 @@ def prompt_gui(path):
                 '--entry',
                 '--entry-text=' + basename,
                 '--title=Batch Tool',
-                '--window-icon=/usr/share/icons/elementary-xfce/mimes/24/' + icon]
+                '--window-icon=info']
         args = base + ['--text=Filename:']
         retry_args = base + ['--text=' + retry_text]
 
