@@ -105,6 +105,6 @@ Copyright (c) 2015 Six (brbsix@gmail.com).
 
 Licensed under the GPLv3 license.
 
-.. _homepage: http://sourceforge.net/projects/yad-dialog
+.. _homepage: http://sourceforge.net/projects/yad-dialog/
 .. _Launchpad: https://launchpad.net/~nilarimogard/+archive/ubuntu/webupd8
 .. _subnuker: https://github.com/brbsix/subnuker
