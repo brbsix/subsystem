@@ -38,7 +38,7 @@ yad is available via tarball (at its homepage_) or webupd8team PPA (Launchpad_):
 
 ::
 
-    sudo apt-add-repository ppa:webupd8team/y-ppa-manager
+    sudo apt-add-repository ppa:nilarimogard/webupd8
     sudo apt-get update && sudo apt-get install yad
 
 In order to make use of ``subsystem``, you'll need to install a downloader. I recommend the Python 3 compatible ``ss``. In my limited experience is the fastest and most reliable tool available.
@@ -106,5 +106,5 @@ Copyright (c) 2015 Six (brbsix@gmail.com).
 Licensed under the GPLv3 license.
 
 .. _homepage: http://sourceforge.net/projects/yad-dialog
-.. _Launchpad: https://launchpad.net/~webupd8team/+archive/ubuntu/y-ppa-manager
+.. _Launchpad: https://launchpad.net/~nilarimogard/+archive/ubuntu/webupd8
 .. _subnuker: https://github.com/brbsix/subnuker
