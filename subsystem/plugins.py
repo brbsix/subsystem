@@ -7,7 +7,9 @@
 def periscope(paths, language):
     """
     Download subtitles for multiple video files via periscope.
-    NOTE: currently supporting periscope via the shell because it is Py2 only"""
+
+    NOTE: Execute periscope via shell because it only supports Python 2
+    """
 
     from subsystem.subsystem import multithreader
 
@@ -27,7 +29,9 @@ def ss(paths):  # pylint: disable=C0103
 def subscope(paths, language):
     """
     Download subtitles for multiple video files via subscope script.
-    NOTE: currently supporting Py2 version of subscope via the shell (Py3 version has issues)
+
+    NOTE: Runs subscope via shell to support Python 2 version of subscope
+          (and the Python 3 version has issues)
     """
 
     from subsystem.subsystem import multithreader
@@ -38,7 +42,8 @@ def subscope(paths, language):
 # def subscope(paths, language):
 #     """
 #     Download subtitles for multiple video files via subscope module.
-#     NOTE: subscope module is buggy in py3
+
+#     NOTE: The Python 3 version of subscope has issues
 #     """
 
 #     from subscope.core import DownloadFirstHandler, Subscope
