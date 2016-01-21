@@ -92,8 +92,8 @@ class Downloader:
 
         if not self.available:
             error('No supported downloaders available')
-            print('\nPlease install one of the following:')
-            print(self.SUPPORTED)
+            print('\nPlease install one of the following:', file=sys.stderr)
+            print(self.SUPPORTED, file=sys.stderr)
             sys.exit(1)
 
         default = Config.DOWNLOADER_DEFAULT
