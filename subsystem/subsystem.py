@@ -434,7 +434,8 @@ def prompt_terminal(path):
     # retry prompt if new filename already exists
     while os.path.exists(os.path.join(dirname, new_basename + extension)) and \
             new_basename != basename:
-        new_basename = rlinput('Sorry, please try again... Filename: ', basename)
+        new_basename = rlinput('Sorry, please try again... Filename: ',
+                               basename)
 
     if new_basename == '':
         new_basename = basename
