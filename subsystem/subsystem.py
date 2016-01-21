@@ -197,7 +197,7 @@ def failure(path, downloader):
     """Display warning message via stderr or GUI."""
     base = os.path.basename(path)
     if sys.stdin.isatty():
-        print("INFO [{0}]:".format(downloader), "Failed to download '{0}'".format(base))
+        print("INFO [{0}]: Failed to download '{1}'".format(downloader, base))
     else:
         notify_failure(base, downloader)
 
