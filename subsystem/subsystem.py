@@ -38,6 +38,7 @@ import sys
 
 
 class Config:   # pylint: disable=too-few-public-methods
+
     """Store global script configuration values."""
 
     # indicate the GUI terminal app (to be used with subnuker)
