@@ -30,11 +30,9 @@ The ``subsystem`` package is known to be compatible with Python 3.
 Requirements
 ============
 
-*NOTE: The most recent version of subsystem is bundled with yad 0.28.0. It is tentatively included at this time purely out of convenience for users.*
-
 A GTK dialog tool (yad or zenity) is required if you'd like to make use of the GUI renamer.
 
-yad is available via tarball (at its homepage_) or webupd8team PPA (Launchpad_):
+yad is the recommmended tool. It is available via tarball (at it's homepage_) or webupd8team PPA (Launchpad_):
 
 ::
 

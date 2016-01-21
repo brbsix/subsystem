@@ -23,7 +23,6 @@ setup(
               'ss', 'subscope', 'subtitle', 'thunar', 'yad'],
     packages=find_packages(),
     install_requires=['subnuker'],
-    data_files=[('bin', ['binary/yad'])],
     entry_points={
         'console_scripts': ['subsystem=subsystem.subsystem:main'],
     },
