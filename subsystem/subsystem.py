@@ -48,6 +48,7 @@ class Config:   # pylint: disable=R0903
 
 
 class Downloader:
+
     """Functions to prepare and use the downloaders."""
 
     MODULES = ['ss']

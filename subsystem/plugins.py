@@ -23,6 +23,7 @@ def ss(paths):  # pylint: disable=C0103
         # main will strip arg[0]
         main(['ss'] + paths)
 
+
 def subscope(paths, language):
     """
     Download subtitles for multiple video files via subscope script.
@@ -32,6 +33,7 @@ def subscope(paths, language):
     from subsystem.subsystem import multithreader
 
     multithreader(['subscope', '-l', language], paths)
+
 
 # def subscope(paths, language):
 #     """
