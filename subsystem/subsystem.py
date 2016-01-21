@@ -298,13 +298,11 @@ def parse(args, epilog):
         usage="%(prog)s [OPTIONS] FILES|FOLDERS")
     parser.add_argument(
         "-d", "--downloader",
-        action="store",
         default=Config.DOWNLOADER_DEFAULT,
         dest="downloader",
         help="indicate downloader to use")
     parser.add_argument(
         "-l", "--language",
-        action="store",
         default=language,
         dest="language",
         help="indicate language to use [%s]" % language)
