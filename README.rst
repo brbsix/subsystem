@@ -93,7 +93,7 @@ To silence ``notify-send`` notications upon failure:
 
 ::
 
-    subsystem --quiet FILES
+    subsystem --quiet FILE...
 
 *Note: Multiple command line options may be used concurrently*
 
