@@ -39,7 +39,7 @@ yad is the recommmended tool. It is available via tarball (at it's homepage_) or
     sudo apt-add-repository ppa:nilarimogard/webupd8
     sudo apt-get update && sudo apt-get install yad
 
-In order to make use of ``subsystem``, you'll need to install a downloader. I recommend the Python 3 compatible ``ss``. In my limited experience is the fastest and most reliable tool available.
+In order to make use of ``subsystem``, you'll need to install a downloader. I recommend the Python 3 compatible ``ss``. In my experience it is the fastest and most reliable tool available.
 
 ::
 
