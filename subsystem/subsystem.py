@@ -321,9 +321,10 @@ def parse(args, epilog):
     combination of directories, files, and options."""
 
     import argparse
-
     from locale import getlocale
-    language = getlocale()[0].split('_')[0].lower()
+
+    # set the default language
+    default_language = getlocale()[0].split('_')[0].lower()
 
     parser = argparse.ArgumentParser(
         add_help=False,
@@ -337,9 +338,9 @@ def parse(args, epilog):
         help="indicate downloader to use")
     parser.add_argument(
         "-l", "--language",
-        default=language,
+        default=default_language,
         dest="language",
-        help="indicate language to use [%s]" % language)
+        help="indicate language to use [%s]" % default_language)
     parser.add_argument(
         "-q", "--quiet",
         action="store_true",
