@@ -508,19 +508,14 @@ def scan(subtitles):
     # check whether aeidon is available
     aeidon = find_spec('aeidon') is not None
 
-    # check whether subnuker supports --ignore-case
-    ignore_case = StrictVersion(subnuker.__version__) >= StrictVersion('0.4.5')
-
     if sys.stdin.isatty():
         # launch subnuker from the existing terminal
         args = (['--aeidon'] if aeidon else []) + \
-               (['--ignore-case'] if ignore_case else []) + \
                ['--gui', '--regex'] + subtitles
         subnuker.main(args)
     else:
         # launch subnuker from a new terminal
         args = (['--aeidon'] if aeidon else []) + \
-               (['--ignore-case'] if ignore_case else []) + \
                ['--gui', '--regex']
         execute(Config.TERMINAL,
                 '--execute',
