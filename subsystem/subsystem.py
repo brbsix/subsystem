@@ -280,10 +280,10 @@ def main(args=None):
 
 
 def multithreader(args, paths):
-    """Execute multiple shell processes at once."""
+    """Execute multiple processes at once."""
 
     def shellprocess(path):
-        """Return a ready-to-use shell subprocess."""
+        """Return a ready-to-use subprocess."""
         import subprocess
         process = subprocess.Popen(args + [path],
                                    stderr=subprocess.PIPE,
