@@ -14,7 +14,7 @@ This script is intended to be a one-stop-shop for batch preparing freshly downlo
 
 The tool can be used from the command-line but is ideal for use via GUI file managers (i.e. Thunar Custom Actions or Nautilus actions.). With a single click of several video files: prompt to rename files, download the best subtitle file available (displaying a popup notification upon failure), then open a terminal window to scan and remove advertising (via subnuker_).
 
-If you are used to downloading subtitles with other tools, you are in for a surprise. Not only does it pack a wicked set of features, but it makes full use your processor to download subtitles in parallel... superfast.
+If you have some experience downloading subtitles with other tools, you are in for a pleasant surprise. Not only does it pack a wicked set of features, but it makes full use your processor to download subtitles in parallel... superfast.
 
 
 Installation
