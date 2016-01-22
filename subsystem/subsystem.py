@@ -76,9 +76,7 @@ class Downloader:
             except ImportError:
                 pass
 
-        available.sort()
-
-        return available
+        return sorted(available)
 
     def getdefault(self):
         """Return an available default downloader."""
