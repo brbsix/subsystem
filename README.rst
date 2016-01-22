@@ -20,11 +20,13 @@ If you are used to downloading subtitles with other tools, you are in for a surp
 Installation
 ============
 
+To install to the Python user install directory for your platform (typically ``$HOME/.local/``):
+
 ::
 
   pip3 install --user subsystem
 
-The ``subsystem`` package is known to be compatible with Python 3.
+The ``subsystem`` package is compatible with Python 3. If installing with the ``--user`` flag, ensure that ``$HOME/.local/bin`` is on your PATH.
 
 
 Requirements
