@@ -32,7 +32,7 @@ import sys
 
 
 __program__ = 'subsystem'
-__version__ = '0.5.2'
+__version__ = '0.5.3'
 
 
 class Config:   # pylint: disable=too-few-public-methods
