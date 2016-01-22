@@ -424,7 +424,8 @@ def prompt_gui(path):
 
     # display filename prompt
     try:
-        new_basename = subprocess.check_output(args).decode().strip()
+        new_basename = subprocess.check_output(
+            args, universal_newlines=True).strip()
     except subprocess.CalledProcessError:
         sys.exit(1)
 
@@ -432,7 +433,8 @@ def prompt_gui(path):
     while os.path.exists(os.path.join(dirname, new_basename + extension)) and \
             new_basename != basename:
         try:
-            new_basename = subprocess.check_output(retry_args).decode().strip()
+            new_basename = subprocess.check_output(
+                retry_args, universal_newlines=True).strip()
         except subprocess.CalledProcessError:
             sys.exit(1)
 
