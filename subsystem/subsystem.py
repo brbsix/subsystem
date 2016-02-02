@@ -363,7 +363,7 @@ def parse(args, epilog):
     parser.add_argument(
         "--version",
         action="version",
-        version="%s %s" % (__program__, __version__))
+        version='%(prog)s ' + __version__)
     parser.add_argument(
         action="append",
         dest="targets",
