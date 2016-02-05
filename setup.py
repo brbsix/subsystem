@@ -1,8 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from setuptools import find_packages, setup
-from subsystem.subsystem import __program__
-from subsystem.subsystem import __version__
+from subsystem.subsystem import __program__, __version__
 
 
 def read(filename):
