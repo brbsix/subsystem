@@ -33,6 +33,7 @@ import sys
 
 __program__ = 'subsystem'
 __version__ = '0.5.3'
+__description__ = 'Download and process subtitle files in batch.'
 
 
 class Config:   # pylint: disable=too-few-public-methods
@@ -328,7 +329,7 @@ def parse(args, epilog):
 
     parser = argparse.ArgumentParser(
         add_help=False,
-        description="Download subtitle files for videos.",
+        description=__description__,
         epilog=epilog,
         usage="%(prog)s [OPTIONS] FILES|FOLDERS")
     parser.add_argument(

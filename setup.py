@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from setuptools import find_packages, setup
-from subsystem.subsystem import __program__, __version__
+from subsystem.subsystem import __description__, __program__, __version__
 
 
 def read(filename):
@@ -12,9 +12,9 @@ def read(filename):
 setup(
     name=__program__,
     version=__version__,
+    description=__description__,
     author='Brian Beffa',
     author_email='brbsix@gmail.com',
-    description="Download and process subtitle files in batch",
     long_description=read('README.rst'),
     url='https://github.com/brbsix/subsystem',
     license='GPLv3',
