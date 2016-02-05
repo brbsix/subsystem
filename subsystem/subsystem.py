@@ -318,8 +318,10 @@ def notify_warning(message):
 
 
 def parse(args, epilog):
-    """Parse command-line arguments. Arguments may consist of any
-    combination of directories, files, and options."""
+    """
+    Parse command-line arguments. Arguments may consist of any
+    combination of directories, files, and options.
+    """
 
     import argparse
     from locale import getlocale
