@@ -130,7 +130,7 @@ class Downloader:
         index = available.index(Config.DOWNLOADER_DEFAULT)
         available[index] = bold + '(' + available[index] + ')' + end
         formatted = '  |  '.join(available)
-        return "Downloaders available: " + formatted
+        return 'Downloaders available: ' + formatted
 
 
 def check_connectivity():
@@ -331,45 +331,45 @@ def parse(args, epilog):
         add_help=False,
         description=__description__,
         epilog=epilog,
-        usage="%(prog)s [OPTIONS] FILES|FOLDERS")
+        usage='%(prog)s [OPTIONS] FILES|FOLDERS')
     parser.add_argument(
-        "-d", "--downloader",
+        '-d', '--downloader',
         default=Config.DOWNLOADER_DEFAULT,
-        dest="downloader",
-        help="indicate downloader to use")
+        dest='downloader',
+        help='indicate downloader to use')
     parser.add_argument(
-        "-l", "--language",
+        '-l', '--language',
         default=default_language,
-        dest="language",
-        help="indicate language to use [%s]" % default_language)
+        dest='language',
+        help='indicate language to use [%s]' % default_language)
     parser.add_argument(
-        "-q", "--quiet",
-        action="store_true",
-        dest="quiet",
-        help="do not display failure notifications via notify-send")
+        '-q', '--quiet',
+        action='store_true',
+        dest='quiet',
+        help='do not display failure notifications via notify-send')
     parser.add_argument(
-        "-r", "--rename",
-        action="store_true",
-        dest="rename",
-        help="prompt to rename video files")
+        '-r', '--rename',
+        action='store_true',
+        dest='rename',
+        help='prompt to rename video files')
     parser.add_argument(
-        "-s", "--scan",
-        action="store_true",
-        dest="scan",
-        help="remove advertising from subtitle files")
+        '-s', '--scan',
+        action='store_true',
+        dest='scan',
+        help='remove advertising from subtitle files')
     parser.add_argument(
-        "-h", "--help",
-        action="help",
+        '-h', '--help',
+        action='help',
         help=argparse.SUPPRESS)
     parser.add_argument(
-        "--version",
-        action="version",
+        '--version',
+        action='version',
         version='%(prog)s ' + __version__)
     parser.add_argument(
-        action="append",
-        dest="targets",
+        action='append',
+        dest='targets',
         help=argparse.SUPPRESS,
-        nargs="*")
+        nargs='*')
 
     options = parser.parse_args(args)
     arguments = options.targets[0]
