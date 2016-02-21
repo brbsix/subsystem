@@ -32,7 +32,7 @@ import sys
 
 
 __program__ = 'subsystem'
-__version__ = '0.5.3'
+__version__ = '0.5.4'
 __description__ = 'Download and process subtitle files in batch.'
 
 
