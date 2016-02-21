@@ -282,10 +282,9 @@ def multithreader(args, paths):
     def shellprocess(path):
         """Return a ready-to-use subprocess."""
         import subprocess
-        process = subprocess.Popen(args + [path],
-                                   stderr=subprocess.PIPE,
-                                   stdout=subprocess.PIPE)
-        return process
+        return subprocess.Popen(args + [path],
+                                stderr=subprocess.DEVNULL,
+                                stdout=subprocess.DEVNULL)
 
     processes = [shellprocess(path) for path in paths]
 
