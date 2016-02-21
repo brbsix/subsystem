@@ -180,9 +180,7 @@ def execute(*args):
     """Execute shell commands."""
     import subprocess
 
-    subprocess.Popen(args,
-                     stderr=subprocess.PIPE,
-                     stdout=subprocess.PIPE)
+    subprocess.call(args, stdout=subprocess.DEVNULL)
 
 
 def failure(path, downloader):
