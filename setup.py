@@ -1,9 +1,19 @@
 # -*- coding: utf-8 -*-
+"""
+Application setup script
 
+To build package:
+python3 setup.py sdist bdist_wheel clean
+"""
+
+# standard imports
 import io
 import os
 
+# external imports
 from setuptools import find_packages, setup
+
+# application imports
 from subsystem.subsystem import __description__, __program__, __version__
 
 
