@@ -2,6 +2,8 @@
 # -*- coding: utf-8 -*-
 """Interfaces to external download tools."""
 
+from .subsystem import devnull, multithreader
+
 
 def periscope(paths, language):
     """
@@ -10,8 +12,6 @@ def periscope(paths, language):
     NOTE: Execute periscope via shell because it only supports Python 2
     """
 
-    from subsystem.subsystem import multithreader
-
     multithreader(['periscope', '-l', language, '--quiet'], paths)
 
 
@@ -19,7 +19,6 @@ def ss(paths):  # pylint: disable=invalid-name
     """Download subtitles for multiple video files via periscope."""
 
     from ss import main
-    from subsystem.subsystem import devnull
 
     with devnull():
         # main will strip arg[0]
@@ -33,8 +32,6 @@ def subscope(paths, language):
     NOTE: Runs subscope via shell to support Python 2 version of subscope
           (and the Python 3 version has issues)
     """
-
-    from subsystem.subsystem import multithreader
 
     multithreader(['subscope', '-l', language], paths)
 
