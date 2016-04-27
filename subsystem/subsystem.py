@@ -103,7 +103,7 @@ class Downloader:
             fatal('{!r} is not installed'.format(tool))
 
         try:
-            from subsystem import plugins
+            from . import plugins
             downloader = plugins.__getattribute__(tool)
         except AttributeError:
             fatal('{!r} is not a supported download tool'.format(tool))
