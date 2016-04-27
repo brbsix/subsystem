@@ -25,9 +25,10 @@ user    0m2.292s
 sys     0m0.205s
 """
 
-from contextlib import contextmanager
+# standard imports
 import os
 import sys
+from contextlib import contextmanager
 
 # application imports
 from . import __description__, __program__, __version__
