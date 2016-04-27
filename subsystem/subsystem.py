@@ -1,4 +1,3 @@
-#!/usr/bin/python3
 # -*- coding: utf-8 -*-
 """
 Download and process subtitle files in batch.
@@ -328,6 +327,7 @@ def parse(args, epilog):
         add_help=False,
         description=__description__,
         epilog=epilog,
+        prog=__program__,
         usage='%(prog)s [OPTIONS] FILES|FOLDERS')
     parser.add_argument(
         '-d', '--downloader',
@@ -527,7 +527,3 @@ def warning(*args):
         print('WARNING:', *args, file=sys.stderr)
     else:
         notify_warning(*args)
-
-
-if __name__ == '__main__':
-    main()
