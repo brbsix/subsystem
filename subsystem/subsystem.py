@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 # -*- coding: utf-8 -*-
 """
-Download subtitle files in batch.
+Download and process subtitle files in batch.
 
 Additional options allow for renaming video files and removing advertising
 from subtitle files.
