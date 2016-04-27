@@ -509,12 +509,12 @@ def scan(subtitles):
     if sys.stdin.isatty():
         # launch subnuker from the existing terminal
         args = (['--aeidon'] if aeidon else []) + \
-               ['--gui', '--regex'] + subtitles
+            ['--gui', '--regex'] + subtitles
         subnuker.main(args)
     else:
         # launch subnuker from a new terminal
         args = (['--aeidon'] if aeidon else []) + \
-               ['--gui', '--regex']
+            ['--gui', '--regex']
         execute(Config.TERMINAL,
                 '--execute',
                 'subnuker',
