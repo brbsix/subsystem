@@ -1,12 +1,18 @@
 # -*- coding: utf-8 -*-
 
+import io
+import os
+
 from setuptools import find_packages, setup
 from subsystem.subsystem import __description__, __program__, __version__
 
 
-def read(filename):
-    with open(filename) as f:
-        return f.read()
+def read(*names, **kwargs):
+    """Return contents of text file (in the same directory as this file)."""
+    return io.open(
+        os.path.join(os.path.dirname(__file__), *names),
+        encoding=kwargs.get('encoding', 'utf8')
+    ).read()
 
 
 setup(
