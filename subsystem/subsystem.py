@@ -94,21 +94,21 @@ class Downloader:
             return default
         else:
             alternative = self.available[0]
-            warning("Default downloader '%s' not available, using '%s' instead"
-                    % (Config.DOWNLOADER_DEFAULT, alternative))
+            warning('Default downloader {!r} not available, using {!r} instead'
+                    .format(Config.DOWNLOADER_DEFAULT, alternative))
             return alternative
 
     def download(self, paths, tool, language):
         """Download subtitles via a number of tools."""
 
         if tool not in self.available:
-            fatal("'%s' is not installed" % tool)
+            fatal('{!r} is not installed'.format(tool))
 
         try:
             from subsystem import plugins
             downloader = plugins.__getattribute__(tool)
         except AttributeError:
-            fatal("'%s' is not a supported download tool" % tool)
+            fatal('{!r} is not a supported download tool'.format(tool))
 
         try:
             if downloader.__code__.co_argcount is 2:
@@ -119,7 +119,7 @@ class Downloader:
             if not check_connectivity():
                 error('Internet connectivity appears to be disabled')
             else:
-                error("'{0}' experienced an unknown error".format(tool))
+                error('{!r} experienced an unknown error'.format(tool))
 
     def epilog(self):
         """Return text formatted for the usage description's epilog."""
@@ -187,7 +187,7 @@ def failure(path, downloader):
     """Display warning message via stderr or GUI."""
     base = os.path.basename(path)
     if sys.stdin.isatty():
-        print("INFO [{0}]: Failed to download '{1}'".format(downloader, base))
+        print('INFO [{}]: Failed to download {!r}'.format(downloader, base))
     else:
         notify_failure(base, downloader)
 
@@ -304,7 +304,7 @@ def notify_error(message):
 
 def notify_failure(path, downloader):
     """Display a failure notification."""
-    notify('{0} [{1}]'.format(__program__, downloader),
+    notify('{} [{}]'.format(__program__, downloader),
            'Subtitles not downloaded successfully.\n' +
            path, 'edit-delete')
 
@@ -340,7 +340,7 @@ def parse(args, epilog):
         '-l', '--language',
         default=default_language,
         dest='language',
-        help='indicate language to use [%s]' % default_language)
+        help='indicate language to use [{}]'.format(default_language))
     parser.add_argument(
         '-q', '--quiet',
         action='store_true',
