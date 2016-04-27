@@ -14,7 +14,7 @@ import os
 from setuptools import find_packages, setup
 
 # application imports
-from subsystem.subsystem import __description__, __program__, __version__
+from subsystem import __description__, __program__, __version__
 
 
 def read(*names, **kwargs):

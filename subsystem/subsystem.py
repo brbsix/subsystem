@@ -30,10 +30,8 @@ from contextlib import contextmanager
 import os
 import sys
 
-
-__program__ = 'subsystem'
-__version__ = '0.5.4'
-__description__ = 'Download and process subtitle files in batch.'
+# application imports
+from . import __description__, __program__, __version__
 
 
 class Config:   # pylint: disable=too-few-public-methods
