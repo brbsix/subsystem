@@ -495,7 +495,6 @@ def rename(path):
 def scan(subtitles):
     """Remove advertising from subtitles."""
 
-    from distutils.version import StrictVersion
     from importlib.util import find_spec
 
     try:
